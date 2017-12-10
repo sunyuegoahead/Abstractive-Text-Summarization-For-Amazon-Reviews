@@ -113,7 +113,7 @@ class AbstractiveSummarizer(object):
                  learning_rate=0.001,
                  optimizer='adam',
                  epochs=80,
-                 mini_batch_size=64,
+                 mini_batch_size=4,
                  l2_penalty_coeff=0.001,
                  epsilon_for_log = 1e-8,
                  seed=2016,
@@ -164,7 +164,7 @@ class AbstractiveSummarizer(object):
             if i == C:
                 conditional_probs = cur_probs
             else:
-                conditional_probs = tf.concat([conditional_probs, cur_probs], 1)
+                conditional_probs = tf.concat(1, [conditional_probs, cur_probs])
 
         loss = -tf.log(self.params['epsilon_for_log'] + conditional_probs) * y_mask
         loss = tf.reduce_mean(tf.reduce_sum(loss, 1) / tf.cast(tf.reduce_sum(y_mask, 1), tf.float32))
@@ -303,7 +303,7 @@ class AbstractiveSummarizer(object):
             if i == 0:
                 res = cur
             else:
-                res = tf.concat([res, cur], 0)
+                res = tf.concat(0, [res, cur])
             
         return tf.reshape(res, shape=[mb_size, 1])
         
